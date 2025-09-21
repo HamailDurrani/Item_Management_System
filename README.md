@@ -69,12 +69,4 @@
 | Quantity     | INT           | Not Null, >= 0             |
 | CreatedDate  | DATETIME      | Default = GETDATE()        |
 
----
 
-## Setup Instructions
-
-1. **Clone the Repository**
-
-```bash
-git clone https://github.com/yourusername/ItemManagementSystem.git
-cd ItemManagementSystem

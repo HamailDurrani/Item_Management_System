@@ -1,0 +1,143 @@
+﻿@* @model List<ItemManagementSystem.Models.Item>
+@{
+    ViewData["Title"] = "Items";
+}
+
+<div class="container mt-5">
+    <h2>Item List</h2>
+    <hr />
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    <form method="get" class="row mb-3">
+        <div class="col-md-4">
+            <input type="text" name="search" value="@ViewBag.Search" placeholder="Search by name" class="form-control" />
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+        <div class="col-md-6 text-end">
+            <a asp-action="Create" class="btn btn-success">Add New Item</a>
+        </div>
+    </form>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Created Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Description</td>
+                    <td>@item.Price</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.CreatedDate.ToString("yyyy-MM-dd")</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.ItemId" class="btn btn-info btn-sm">Details</a>
+                        <a asp-action="Edit" asp-route-id="@item.ItemId" class="btn btn-warning btn-sm">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@item.ItemId" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+ *@
+
+
+
+@model List<ItemManagementSystem.Models.Item>
+@{
+    ViewData["Title"] = "Items";
+    string sortOrder = ViewBag.SortOrder ?? "name_asc";
+    string search = ViewBag.Search ?? "";
+    int currentPage = ViewBag.CurrentPage;
+    int totalPages = ViewBag.TotalPages;
+}
+
+<div class="container mt-5">
+    <h2>Item List</h2>
+    <hr />
+
+    @* Display success message *@
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    <form method="get" class="row mb-3">
+        <div class="col-md-4">
+            <input type="text" name="search" value="@search" placeholder="Search by name" class="form-control" />
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+        <div class="col-md-6 text-end">
+            <a asp-action="Create" class="btn btn-success">Add New Item</a>
+        </div>
+    </form>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>
+                    Name
+                    <a asp-action="Index" asp-route-sortOrder="name_asc" asp-route-search="@search">▲</a>
+                    <a asp-action="Index" asp-route-sortOrder="name_desc" asp-route-search="@search">▼</a>
+                </th>
+                <th>Description</th>
+                <th>
+                    Price
+                    <a asp-action="Index" asp-route-sortOrder="price_asc" asp-route-search="@search">▲</a>
+                    <a asp-action="Index" asp-route-sortOrder="price_desc" asp-route-search="@search">▼</a>
+                </th>
+                <th>Quantity</th>
+                <th>Created Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Description</td>
+                    <td>@item.Price</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.CreatedDate.ToString("yyyy-MM-dd")</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.ItemId" class="btn btn-info btn-sm">Details</a>
+                        <a asp-action="Edit" asp-route-id="@item.ItemId" class="btn btn-warning btn-sm">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@item.ItemId" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <nav>
+        <ul class="pagination justify-content-center">
+            @for (int i = 1; i <= totalPages; i++)
+            {
+                <li class="page-item @(i == currentPage ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-page="@i" asp-route-search="@search" asp-route-sortOrder="@sortOrder">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>
+
